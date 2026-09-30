@@ -48,7 +48,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               {/* Gradient overlay + text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4">
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4">
                 <p className="text-white font-semibold text-base">{banner.title}</p>
                 <span className="text-white/80 text-xs mt-1 font-medium">Shop Now →</span>
               </div>

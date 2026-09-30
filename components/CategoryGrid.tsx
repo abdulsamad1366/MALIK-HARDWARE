@@ -76,7 +76,7 @@ export default function CategoryGrid({ items, source, heading }: CategoryGridPro
                   </div>
                 )}
               </motion.div>
-              <span className="text-xs sm:text-sm text-text-muted group-hover:text-text-main font-medium text-center transition-colors max-w-[80px] leading-tight">
+              <span className="text-xs sm:text-sm text-text-muted group-hover:text-text-main font-medium text-center transition-colors max-w-20 leading-tight">
                 {item.name}
               </span>
             </Link>

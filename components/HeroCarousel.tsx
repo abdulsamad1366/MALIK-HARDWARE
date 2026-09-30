@@ -67,7 +67,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
        * Only opacity/transform are animated (09-design-motion-guidelines.md §6).
        * CSS scroll-snap on the ul provides a no-JS swipeable fallback.
        */}
-      <div className="relative h-64 sm:h-80 md:h-96 lg:h-[480px]">
+      <div className="relative h-64 sm:h-80 md:h-96 lg:h-120">
         {slides.map((slide, idx) => (
           <div
             key={slide.id}

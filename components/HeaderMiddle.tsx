@@ -126,7 +126,7 @@ export default function HeaderMiddle() {
             </svg>
             {itemCount > 0 && (
               <span
-                className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
+                className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
                 style={{ background: "var(--color-rose)" }}
                 aria-hidden="true"
               >
