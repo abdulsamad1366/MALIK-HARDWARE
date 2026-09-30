@@ -153,33 +153,55 @@ export default function NavBottom({ categories }: NavBottomProps) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 4, scale: 0.98 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 z-50 mt-1 min-w-56 bg-bg-card rounded-xl shadow-xl border border-border-subtle py-2 overflow-hidden"
+                  className={`absolute top-full left-1/2 -translate-x-1/2 z-50 mt-1 bg-bg-card rounded-xl shadow-xl border border-border-subtle py-2 overflow-hidden ${
+                    categories.length > 7 ? "w-[520px] sm:w-[580px] p-3" : "min-w-56"
+                  }`}
                   role="menu"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="px-3.5 py-1 text-[11px] font-semibold tracking-wider text-text-dim uppercase border-b border-border-subtle mb-1">
-                    Catalog Divisions
+                  <div className="px-3 py-1 text-[11px] font-semibold tracking-wider text-text-dim uppercase border-b border-border-subtle mb-1.5 flex items-center justify-between">
+                    <span>Catalog Divisions</span>
+                    <span className="text-amber font-mono text-[10px]">{categories.length} Categories</span>
                   </div>
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat.id}
-                      href={`/category/${cat.slug}`}
-                      onClick={() => setCatOpen(false)}
-                      role="menuitem"
-                      className="flex items-center justify-between px-3.5 py-2 text-sm text-text-muted hover:text-text-main hover:bg-bg-secondary transition-colors rounded-lg mx-1"
-                    >
-                      <span>{cat.name}</span>
-                      <span className="text-xs text-text-dim opacity-70">→</span>
-                    </Link>
-                  ))}
+
+                  {categories.length > 7 ? (
+                    <div className="grid grid-cols-2 gap-x-1 gap-y-0.5">
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          href={`/category/${cat.slug}`}
+                          onClick={() => setCatOpen(false)}
+                          role="menuitem"
+                          className="flex items-center justify-between px-3 py-1.5 text-xs sm:text-sm text-text-muted hover:text-text-main hover:bg-bg-secondary transition-colors rounded-lg"
+                        >
+                          <span className="truncate">{cat.name}</span>
+                          <span className="text-xs text-text-dim opacity-70 ml-1">→</span>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/category/${cat.slug}`}
+                        onClick={() => setCatOpen(false)}
+                        role="menuitem"
+                        className="flex items-center justify-between px-3.5 py-2 text-sm text-text-muted hover:text-text-main hover:bg-bg-secondary transition-colors rounded-lg mx-1"
+                      >
+                        <span>{cat.name}</span>
+                        <span className="text-xs text-text-dim opacity-70">→</span>
+                      </Link>
+                    ))
+                  )}
+
                   {/* Divider + View all */}
-                  <div className="border-t border-border-subtle mt-1.5 pt-1.5 px-1">
+                  <div className="border-t border-border-subtle mt-2 pt-1.5 px-1">
                     <Link
                       href="/products"
                       onClick={() => setCatOpen(false)}
                       role="menuitem"
-                      className="flex items-center justify-between px-3 py-2 text-sm font-medium text-amber hover:bg-bg-secondary rounded-lg transition-colors"
+                      className="flex items-center justify-between px-3 py-2 text-xs sm:text-sm font-semibold text-amber hover:bg-bg-secondary rounded-lg transition-colors"
                     >
                       <span>All Products Catalog</span>
                       <span aria-hidden="true">→</span>

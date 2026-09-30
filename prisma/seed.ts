@@ -79,55 +79,126 @@ async function main() {
   // -------------------------------------------------------------------------
   // Categories — the 7-division catalog structure
   // -------------------------------------------------------------------------
-  const locksCat = await db.category.upsert({
-    where: { slug: "locks" },
-    update: {},
-    create: {
+  const categoriesData = [
+    {
       name: "Locks",
       slug: "locks",
       description: "Mortise locks, deadbolts, padlocks, and digital locks for all security needs.",
       placeholderImage: "/images/categories/locks.jpg",
       displayOrder: 1,
     },
-  });
-
-  const hingesCat = await db.category.upsert({
-    where: { slug: "hinges" },
-    update: {},
-    create: {
+    {
       name: "Hinges",
       slug: "hinges",
       description: "Butt hinges, concealed hinges, piano hinges for doors, cabinets, and furniture.",
       placeholderImage: "/images/categories/hinges.jpg",
       displayOrder: 2,
     },
-  });
-
-  const handlesCat = await db.category.upsert({
-    where: { slug: "handles-pulls" },
-    update: {},
-    create: {
+    {
       name: "Handles & Pulls",
       slug: "handles-pulls",
       description: "Door handles, cabinet pulls, knobs, and aldrop bolts in multiple finishes.",
       placeholderImage: "/images/categories/handles.jpg",
       displayOrder: 3,
     },
-  });
-
-  const fastenersCat = await db.category.upsert({
-    where: { slug: "fasteners" },
-    update: {},
-    create: {
+    {
       name: "Fasteners",
       slug: "fasteners",
       description: "Screws, bolts, nuts, anchors, and rivets for construction and manufacturing.",
       placeholderImage: "/images/categories/fasteners.jpg",
       displayOrder: 4,
     },
-  });
+    {
+      name: "Aldrops & Bolts",
+      slug: "aldrops-bolts",
+      description: "Heavy duty tower bolts, aldrops, barrel bolts and padbolts.",
+      placeholderImage: "/images/categories/aldrops.jpg",
+      displayOrder: 5,
+    },
+    {
+      name: "Door Closers",
+      slug: "door-closers",
+      description: "Hydraulic overhead door closers, floor springs and pivot sets.",
+      placeholderImage: "/images/categories/door-closers.jpg",
+      displayOrder: 6,
+    },
+    {
+      name: "Cabinet Fittings",
+      slug: "cabinet-fittings",
+      description: "Tandem boxes, soft close drawer channels, wardrobe lift systems.",
+      placeholderImage: "/images/categories/cabinet-fittings.jpg",
+      displayOrder: 7,
+    },
+    {
+      name: "Glass Hardware",
+      slug: "glass-hardware",
+      description: "Patch fittings, spider brackets, shower hinges and glass connectors.",
+      placeholderImage: "/images/categories/glass-hardware.jpg",
+      displayOrder: 8,
+    },
+    {
+      name: "Sliding Systems",
+      slug: "sliding-systems",
+      description: "Heavy duty sliding door rollers, tracks, top-hung and bottom rollers.",
+      placeholderImage: "/images/categories/sliding-systems.jpg",
+      displayOrder: 9,
+    },
+    {
+      name: "Kitchen Hardware",
+      slug: "kitchen-hardware",
+      description: "Stainless steel modular wire baskets, spice racks, tall units and pantry pullouts.",
+      placeholderImage: "/images/categories/kitchen-hardware.jpg",
+      displayOrder: 10,
+    },
+    {
+      name: "Tools & Equipment",
+      slug: "tools-equipment",
+      description: "Industrial hand tools, power tools, measuring instruments and workshop supplies.",
+      placeholderImage: "/images/categories/tools.jpg",
+      displayOrder: 11,
+    },
+    {
+      name: "Adhesives & Sealants",
+      slug: "adhesives-sealants",
+      description: "Silicone sealants, acrylic sealants, masking tape and construction adhesive.",
+      placeholderImage: "/images/categories/adhesives.jpg",
+      displayOrder: 12,
+    },
+    {
+      name: "Safes & Security",
+      slug: "safes-security",
+      description: "Biometric and digital electronic safes, hotel lockers, cash boxes.",
+      placeholderImage: "/images/categories/safes.jpg",
+      displayOrder: 13,
+    },
+    {
+      name: "Curtain Hardware",
+      slug: "curtain-hardware",
+      description: "Architectural curtain rods, finials, brackets, runners and motorized tracks.",
+      placeholderImage: "/images/categories/curtain-hardware.jpg",
+      displayOrder: 14,
+    },
+  ];
 
-  console.log("  ✓ Categories: locks, hinges, handles-pulls, fasteners");
+  for (const cat of categoriesData) {
+    await db.category.upsert({
+      where: { slug: cat.slug },
+      update: {
+        name: cat.name,
+        description: cat.description,
+        placeholderImage: cat.placeholderImage,
+        displayOrder: cat.displayOrder,
+      },
+      create: cat,
+    });
+  }
+
+  const locksCat = await db.category.findUniqueOrThrow({ where: { slug: "locks" } });
+  const hingesCat = await db.category.findUniqueOrThrow({ where: { slug: "hinges" } });
+  const handlesCat = await db.category.findUniqueOrThrow({ where: { slug: "handles-pulls" } });
+  const fastenersCat = await db.category.findUniqueOrThrow({ where: { slug: "fasteners" } });
+
+  console.log(`  ✓ Categories: ${categoriesData.length} categories seeded`);
 
   // -------------------------------------------------------------------------
   // Use Cases
