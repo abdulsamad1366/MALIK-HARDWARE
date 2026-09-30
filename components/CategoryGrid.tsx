@@ -1,13 +1,9 @@
 /**
- * components/CategoryGrid.tsx — Circular icon grid (08-homepage-layout.md §2, §4).
+ * components/CategoryGrid.tsx — Portrait card grid for categories and use cases (08-homepage-layout.md §2, §4).
  *
  * Reused for both "Shop by Category" and "Shop by Use" sections.
- * The `source` prop controls which link pattern to use:
- *   "category" → /category/[slug]
- *   "useCase"  → /use/[slug]
- *
- * Motion: subtle hover scale via Framer Motion whileHover (09-design-motion-guidelines.md §7).
- * No entrance animation — performance budget kept (only hover/interaction states).
+ * Design: Portrait cards (aspect-[3/4], height > breadth) for maximum product visibility.
+ * Motion: Framer Motion whileHover for smooth vertical lift and image zoom.
  */
 
 "use client";
@@ -36,49 +32,85 @@ interface CategoryGridProps {
 export default function CategoryGrid({ items, source, heading }: CategoryGridProps) {
   if (!items.length) return null;
 
+  // Responsive column count based on item count
+  const gridColsClass =
+    items.length <= 4
+      ? "grid-cols-2 md:grid-cols-4"
+      : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6";
+
   return (
     <section className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <h2 className="text-lg font-semibold text-text-main tracking-widest uppercase mb-6">
-        {heading}
-      </h2>
-      <div className="flex flex-wrap gap-6 justify-start">
+      {/* Section Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold text-text-main tracking-widest uppercase">
+            {heading}
+          </h2>
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-bg-secondary text-text-muted border border-border-subtle">
+            {items.length}
+          </span>
+        </div>
+      </div>
+
+      {/*
+       * Portrait cards grid (aspect-[3/4] — height exceeds breadth).
+       * Enhances image prominence and hardware product visibility.
+       */}
+      <div className={`grid ${gridColsClass} gap-4 sm:gap-6`}>
         {items.map((item) => {
-          const href = source === "category"
-            ? `/category/${item.slug}`
-            : `/use/${item.slug}`;
+          const href =
+            source === "category" ? `/category/${item.slug}` : `/use/${item.slug}`;
           const imgSrc = item.placeholderImage ?? item.image ?? null;
 
           return (
             <Link
               key={item.id}
               href={href}
-              className="flex flex-col items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded-xl"
-              aria-label={item.name}
+              className="group focus:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded-2xl block"
+              aria-label={`${item.name} — ${source === "category" ? "Shop Category" : "Shop by Use"}`}
             >
-              {/* Hover lift via Framer Motion — only transform, no layout props */}
               <motion.div
-                whileHover={{ scale: 1.06 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-bg-tertiary border-2 border-border-subtle overflow-hidden shadow-sm group-hover:shadow-md transition-shadow"
+                whileHover={{ y: -6, boxShadow: "0 14px 28px rgba(0,0,0,0.12)" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="relative aspect-3/4 rounded-2xl overflow-hidden bg-bg-secondary border border-border-subtle shadow-xs transition-colors group-hover:border-amber/60"
               >
+                {/* Product / Category photography */}
                 {imgSrc ? (
                   <Image
                     src={imgSrc}
                     alt={item.name}
-                    width={96}
-                    height={96}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-108"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 ) : (
-                  /* Placeholder initials when no image */
-                  <div className="w-full h-full flex items-center justify-center text-text-dim text-xl font-bold">
+                  <div className="w-full h-full flex items-center justify-center text-text-dim text-4xl font-bold bg-bg-tertiary">
                     {item.name[0]}
                   </div>
                 )}
+
+                {/* Dark gradient overlay for typography contrast */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-4 sm:p-5 transition-opacity group-hover:from-black/90">
+                  <div className="transform transition-transform duration-200 group-hover:-translate-y-1">
+                    <h3 className="text-white font-semibold text-base sm:text-lg leading-snug tracking-tight drop-shadow-xs">
+                      {item.name}
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-1.5 text-xs font-medium text-amber">
+                      <span>Explore</span>
+                      <svg
+                        className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
-              <span className="text-xs sm:text-sm text-text-muted group-hover:text-text-main font-medium text-center transition-colors max-w-20 leading-tight">
-                {item.name}
-              </span>
             </Link>
           );
         })}
