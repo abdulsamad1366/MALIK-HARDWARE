@@ -172,7 +172,7 @@ async function main() {
   // -------------------------------------------------------------------------
   const mortiseLock = await db.product.upsert({
     where: { slug: "yale-mortise-lock-y585" },
-    update: {},
+    update: { imageUrl: "/images/products/yale-mortise-lock.jpg" },
     create: {
       name: "Yale Mortise Lock Y585",
       slug: "yale-mortise-lock-y585",
@@ -181,6 +181,7 @@ async function main() {
       brand: "Yale",
       price: 1850,
       description: "Heavy-duty 5-lever mortise lock for wooden doors. Satin chrome finish. Suitable for main entrance and bedroom doors.",
+      imageUrl: "/images/products/yale-mortise-lock.jpg",
       specs: [
         { key: "Body Material", value: "Zinc alloy" },
         { key: "Finish", value: "Satin Chrome" },
@@ -195,7 +196,7 @@ async function main() {
 
   const digitalLock = await db.product.upsert({
     where: { slug: "godrej-digital-lock-nx" },
-    update: {},
+    update: { imageUrl: "/images/products/godrej-digital-lock.jpg" },
     create: {
       name: "Godrej NX Digital Lock",
       slug: "godrej-digital-lock-nx",
@@ -204,6 +205,7 @@ async function main() {
       brand: "Godrej",
       price: 7200,
       description: "Biometric + PIN + key digital door lock. Anti-peep feature, low battery alert, 100 fingerprints capacity.",
+      imageUrl: "/images/products/godrej-digital-lock.jpg",
       specs: [
         { key: "Authentication", value: "Fingerprint / PIN / Key" },
         { key: "Fingerprint Capacity", value: "100" },
@@ -218,7 +220,7 @@ async function main() {
 
   const buttHinge = await db.product.upsert({
     where: { slug: "stainless-butt-hinge-4inch" },
-    update: {},
+    update: { imageUrl: "/images/products/ss-butt-hinge.jpg" },
     create: {
       name: "SS Butt Hinge 4 Inch (Pair)",
       slug: "stainless-butt-hinge-4inch",
@@ -227,6 +229,7 @@ async function main() {
       brand: "Dorset",
       price: 95,
       description: "304 grade stainless steel butt hinge for wooden/metal doors. Ball bearing, anti-rust coating. Sold in pairs.",
+      imageUrl: "/images/products/ss-butt-hinge.jpg",
       specs: [
         { key: "Size", value: "4 × 3 × 3 mm" },
         { key: "Material", value: "SS 304" },
@@ -241,7 +244,7 @@ async function main() {
 
   const aldropBolt = await db.product.upsert({
     where: { slug: "aldrop-tower-bolt-12inch" },
-    update: {},
+    update: { imageUrl: "/images/products/aldrop-tower-bolt.jpg" },
     create: {
       name: "Aldrop Tower Bolt 12 Inch",
       slug: "aldrop-tower-bolt-12inch",
@@ -250,6 +253,7 @@ async function main() {
       brand: "Tata Agrico",
       price: 145,
       description: "Heavy-duty 12-inch tower bolt / aldrop for main doors and gates. Powder-coated finish.",
+      imageUrl: "/images/products/aldrop-tower-bolt.jpg",
       specs: [
         { key: "Length", value: "12 inches (300 mm)" },
         { key: "Material", value: "Mild Steel" },
@@ -263,7 +267,7 @@ async function main() {
 
   const cabinetPull = await db.product.upsert({
     where: { slug: "cp-cabinet-pull-128mm" },
-    update: {},
+    update: { imageUrl: "/images/products/cabinet-pull.jpg" },
     create: {
       name: "CP Cabinet Pull Handle 128mm",
       slug: "cp-cabinet-pull-128mm",
@@ -272,6 +276,7 @@ async function main() {
       brand: "Hafele",
       price: 220,
       description: "Chrome plated zinc alloy cabinet pull handle. Centre-to-centre 128 mm. For kitchen and wardrobe cabinets.",
+      imageUrl: "/images/products/cabinet-pull.jpg",
       specs: [
         { key: "C-C Distance", value: "128 mm" },
         { key: "Total Length", value: "160 mm" },
@@ -285,7 +290,7 @@ async function main() {
 
   const anchorBolt = await db.product.upsert({
     where: { slug: "rawl-anchor-bolt-m8" },
-    update: {},
+    update: { imageUrl: "/images/products/rawl-anchor-bolt.jpg" },
     create: {
       name: "Rawlplug Anchor Bolt M8 × 80mm (Box of 50)",
       slug: "rawl-anchor-bolt-m8",
@@ -294,6 +299,7 @@ async function main() {
       brand: "Rawlplug",
       price: 680,
       description: "Wedge anchor bolt for concrete and brick fixing. M8 × 80 mm. Zinc electroplated. Box of 50 pieces.",
+      imageUrl: "/images/products/rawl-anchor-bolt.jpg",
       specs: [
         { key: "Thread", value: "M8" },
         { key: "Length", value: "80 mm" },
