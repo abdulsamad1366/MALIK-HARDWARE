@@ -1,0 +1,234 @@
+// prisma/schema.prisma
+// Single source of truth for every table and relation.
+// Stack: Supabase Postgres via Prisma ORM (see ARCHITECTURE.md §2).
+// Migrations: `npx prisma migrate dev` — requires DATABASE_URL in .env.local.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum StockStatus {
+  IN_STOCK
+  OUT_OF_STOCK
+  ON_REQUEST
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  TRADE_CREDIT
+}
+
+// ---------------------------------------------------------------------------
+// User — the central identity record.
+// isPriceVerified is the critical gate field: an admin flips it manually.
+// It must NEVER be trusted from a JWT claim alone — re-check against this
+// table on every request that touches price, cart, or checkout.
+// ---------------------------------------------------------------------------
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  passwordHash    String
+  role            Role      @default(CUSTOMER)
+  isPriceVerified Boolean   @default(false) // CRITICAL: admin-controlled, gates all pricing
+  phone           String?
+  companyName     String?
+  gstin           String?
+  addresses       Address[]
+  cart            Cart?
+  orders          Order[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Shipping/billing address; a user may have several, one flagged isDefault.
+model Address {
+  id         String  @id @default(cuid())
+  user       User    @relation(fields: [userId], references: [id])
+  userId     String
+  fullName   String
+  phone      String
+  street     String
+  city       String
+  state      String
+  postalCode String
+  country    String
+  isDefault  Boolean @default(false)
+}
+
+// ---------------------------------------------------------------------------
+// Category — top-level product taxonomy. One product belongs to one category.
+// ---------------------------------------------------------------------------
+model Category {
+  id               String    @id @default(cuid())
+  name             String
+  slug             String    @unique
+  description      String
+  placeholderImage String
+  displayOrder     Int
+  products         Product[]
+}
+
+// UseCase — cross-cutting taxonomy (Bathroom, Kitchen, etc.).
+// Many-to-many with Product via Prisma's implicit join table.
+model UseCase {
+  id           String    @id @default(cuid())
+  name         String    // e.g. "Bathroom", "Main Entrance"
+  slug         String    @unique
+  image        String    // circular thumbnail; falls back per image policy
+  displayOrder Int
+  products     Product[] // implicit many-to-many via Prisma
+}
+
+// ---------------------------------------------------------------------------
+// Product — the core commerce entity.
+// PRICE GATE: the `price` field must never appear in a JSON response
+// to a request that fails the isPriceVerified check. Enforce this at the
+// Prisma `select` level (omit the field in the query), not by deleting it
+// from the result after the fact.
+// ---------------------------------------------------------------------------
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  category    Category    @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  useCases    UseCase[]   // many-to-many: a product can serve several use cases
+  brand       String
+  price       Decimal     // PRICE GATE — see above
+  description String
+  specs       Json        // array of { key, value } — technical spec table
+  imageUrl    String?     // falls back per image policy if unset
+  stockStatus StockStatus @default(IN_STOCK)
+  featured    Boolean     @default(false)
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Cart / CartItem — one cart per verified user.
+// ---------------------------------------------------------------------------
+model Cart {
+  id        String     @id @default(cuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String     @unique
+  items     CartItem[]
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Order / OrderItem — immutable record after placement.
+// OrderItem snapshots productName and unitPrice at order time so the record
+// stays accurate even if a product is later renamed, re-priced, or deleted.
+// ---------------------------------------------------------------------------
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique // format: MHM-YYYYMMDD-XXXX
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String
+  items           OrderItem[]
+  subtotal        Decimal
+  taxAmount       Decimal
+  totalAmount     Decimal
+  shippingAddress Json          // snapshot at order time
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  product     Product @relation(fields: [productId], references: [id])
+  productId   String
+  productName String  // snapshot — survives if the product is later renamed/deleted
+  unitPrice   Decimal // price locked in at order time, not looked up later
+  quantity    Int
+  lineTotal   Decimal
+}
+
+// ---------------------------------------------------------------------------
+// Content / admin-editable models
+// ---------------------------------------------------------------------------
+
+// Single-row table: enforce via findFirst + upsert in the app layer.
+// Empty marqueeMessage → MarqueeBar collapses to 0 height.
+model SiteSettings {
+  id             String   @id @default(cuid())
+  marqueeMessage String   @default("")
+  updatedById    String?
+  updatedAt      DateTime @updatedAt
+}
+
+// Blog post — isPublished false means draft, visible to admin only.
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String    // markdown
+  coverImage  String?   // falls back per image policy if unset
+  authorName  String
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Hero carousel slide — displayed on homepage, ordered by displayOrder.
+model HeroSlide {
+  id           String  @id @default(cuid())
+  imageUrl     String  // falls back to hero-banner.jpg if unset
+  headline     String?
+  linkUrl      String?
+  displayOrder Int
+  isActive     Boolean @default(true)
+}
+
+// Promo banner tile — 2-3 large rectangular tiles on homepage.
+model PromoBanner {
+  id           String  @id @default(cuid())
+  title        String  // e.g. "Aldrop"
+  image        String
+  linkUrl      String
+  displayOrder Int
+  isActive     Boolean @default(true)
+}

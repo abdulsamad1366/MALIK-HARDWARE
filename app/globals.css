@@ -1,0 +1,66 @@
+/**
+ * app/globals.css — Global styles and design system tokens (Tailwind v4).
+ *
+ * In Tailwind v4, theme tokens are defined here as CSS custom properties
+ * inside @theme { } — not in a tailwind.config.ts file (which no longer
+ * exists in v4). The naming convention maps to Tailwind utility classes:
+ *   --color-bg-primary → bg-bg-primary
+ *   --color-text-main  → text-text-main
+ *   etc.
+ *
+ * Palette from 06-design-system.md: minimal/light theme.
+ * No dark-mode overrides — the spec is explicitly a light-only design.
+ *
+ * Typography: system font stack (no external font request on every page load).
+ * Type scale: Tailwind's default scale (sm/base/lg/xl/2xl/3xl/4xl).
+ */
+
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------
+   Design system tokens — 06-design-system.md palette, Tailwind v4 syntax.
+   These become utility classes: bg-bg-primary, text-text-main, etc.
+   ------------------------------------------------------------------------- */
+@theme {
+  /* Backgrounds */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-bg-card: #ffffff;
+
+  /* Borders */
+  --color-border-subtle: #e2e8f0;
+  --color-border-medium: #cbd5e1;
+
+  /* Text */
+  --color-text-main: #0f172a;
+  --color-text-muted: #475569;
+  --color-text-dim: #64748b;
+
+  /* Accent colours — used sparingly */
+  --color-amber: #d97706;   /* restrained accent */
+  --color-emerald: #059669; /* stock / success */
+  --color-rose: #e11d48;    /* errors / out of stock */
+
+  /* Typography — system stack, no render-blocking font request */
+  --font-sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* -------------------------------------------------------------------------
+   Base styles — applied to every page.
+   Background and text use tokens, not hardcoded hex values.
+   ------------------------------------------------------------------------- */
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  /* Prevent content width from causing horizontal scroll on mobile */
+  overflow-x: hidden;
+}
+
+/* Smooth focus rings — visible, not intrusive */
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
