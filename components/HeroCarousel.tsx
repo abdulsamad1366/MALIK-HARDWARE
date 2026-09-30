@@ -1,18 +1,18 @@
 /**
  * components/HeroCarousel.tsx — Full-width hero image slider (08-homepage-layout.md §1).
  *
- * Motion: GSAP for slide transitions (09-design-motion-guidelines.md §5).
+ * Visual: Pure imagery without text overlays.
+ * Motion: Framer Motion direction-aware sliding carousel with drag/swipe support.
  * Auto-advances every 5 seconds; pauses on hover.
- * CSS scroll-snap fallback: slides still visible/swipeable with JS disabled.
- * prefers-reduced-motion: disables auto-advance and transition animations.
- * Receives slides as props from the server parent page.
+ * prefers-reduced-motion: crossfades opacity without horizontal displacement.
  */
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeroSlide {
   id: string;
@@ -26,117 +26,203 @@ interface HeroCarouselProps {
   slides: HeroSlide[];
 }
 
+/** Variants for direction-aware sliding animation */
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+};
+
+/** Accessible reduced-motion variants: crossfade only */
+const reducedMotionVariants = {
+  enter: { opacity: 0 },
+  center: { opacity: 1, zIndex: 1 },
+  exit: { opacity: 0, zIndex: 0 },
+};
+
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
 export default function HeroCarousel({ slides }: HeroCarouselProps) {
-  const [current, setCurrent] = useState(0);
+  const [[current, direction], setSlideState] = useState([0, 0]);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Check prefers-reduced-motion once on mount.
-  const reducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /** Move to the next slide. */
-  function next() {
-    setCurrent((c) => (c + 1) % slides.length);
-  }
-
-  /** Move to the previous slide. */
-  function prev() {
-    setCurrent((c) => (c - 1 + slides.length) % slides.length);
-  }
-
-  // Auto-advance every 5 seconds, disabled with reduced-motion or on hover.
+  // Check prefers-reduced-motion once on mount
+  const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
-    if (reducedMotion || paused || slides.length <= 1) return;
-    timerRef.current = setInterval(next, 5000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [paused, slides.length, reducedMotion]);
+    if (typeof window !== "undefined") {
+      setReducedMotion(
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
+    }
+  }, []);
 
-  if (!slides.length) return null;
+  const total = slides.length;
+
+  /** Move slide by delta (+1 for next, -1 for prev) */
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setSlideState(([prevIndex]) => {
+        const nextIndex = (prevIndex + newDirection + total) % total;
+        return [nextIndex, newDirection];
+      });
+    },
+    [total]
+  );
+
+  /** Jump directly to a specific slide */
+  const goToSlide = (index: number) => {
+    if (index === current) return;
+    const newDir = index > current ? 1 : -1;
+    setSlideState([index, newDir]);
+  };
+
+  // Auto-advance every 5 seconds, paused on hover or with reduced motion
+  useEffect(() => {
+    if (reducedMotion || paused || total <= 1) return;
+    timerRef.current = setInterval(() => {
+      paginate(1);
+    }, 5000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [paused, total, reducedMotion, paginate]);
+
+  if (!total) return null;
+
+  const activeSlide = slides[current];
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-bg-tertiary"
-      aria-label="Hero carousel"
+      className="relative w-full overflow-hidden bg-bg-tertiary select-none"
+      aria-label="Hero visual gallery"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/*
-       * Slide track — each slide is positioned absolutely and toggled by opacity.
-       * Only opacity/transform are animated (09-design-motion-guidelines.md §6).
-       * CSS scroll-snap on the ul provides a no-JS swipeable fallback.
-       */}
-      <div className="relative h-64 sm:h-80 md:h-96 lg:h-120">
-        {slides.map((slide, idx) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity ${
-              reducedMotion ? "" : "duration-500"
-            } ${idx === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}
-            aria-hidden={idx !== current}
+      {/* Slide track */}
+      <div className="relative h-72 sm:h-96 md:h-112 lg:h-136 xl:h-144 w-full overflow-hidden">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={activeSlide.id}
+            custom={direction}
+            variants={reducedMotion ? reducedMotionVariants : slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 280, damping: 30 },
+              opacity: { duration: 0.35 },
+            }}
+            drag={total > 1 ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(_, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
+              if (swipe < -swipeConfidenceThreshold) {
+                paginate(1);
+              } else if (swipe > swipeConfidenceThreshold) {
+                paginate(-1);
+              }
+            }}
+            className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
           >
-            <Image
-              src={slide.imageUrl}
-              alt={slide.headline ?? `Hero slide ${idx + 1}`}
-              fill
-              className="object-cover"
-              priority={idx === 0} // LCP image — load eagerly
-              sizes="100vw"
-            />
-            {/* Optional headline overlay */}
-            {slide.headline && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 px-6 text-center">
-                <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold drop-shadow">
-                  {slide.headline}
-                </h2>
-                {slide.linkUrl && (
-                  <Link
-                    href={slide.linkUrl}
-                    className="mt-4 px-6 py-2 rounded-lg text-sm font-semibold text-white border-2 border-white hover:bg-white hover:text-text-main transition-colors"
-                  >
-                    Shop Now
-                  </Link>
-                )}
+            {activeSlide.linkUrl ? (
+              <Link
+                href={activeSlide.linkUrl}
+                className="relative block w-full h-full"
+                aria-label={`Slide ${current + 1}`}
+                tabIndex={0}
+              >
+                <Image
+                  src={activeSlide.imageUrl}
+                  alt={`Hero display ${current + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={current === 0}
+                  sizes="100vw"
+                />
+              </Link>
+            ) : (
+              <div className="relative w-full h-full">
+                <Image
+                  src={activeSlide.imageUrl}
+                  alt={`Hero display ${current + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={current === 0}
+                  sizes="100vw"
+                />
               </div>
             )}
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Prev / Next controls */}
-      {slides.length > 1 && (
+      {/* Prev / Next navigation arrows */}
+      {total > 1 && (
         <>
           <button
-            onClick={prev}
+            onClick={() => paginate(-1)}
             aria-label="Previous slide"
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full p-2 shadow transition-colors"
+            className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-text-main flex items-center justify-center shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
           >
-            <svg className="w-5 h-5 text-text-main" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg
+              className="w-5 h-5 text-text-main"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
           <button
-            onClick={next}
+            onClick={() => paginate(1)}
             aria-label="Next slide"
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white rounded-full p-2 shadow transition-colors"
+            className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-text-main flex items-center justify-center shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
           >
-            <svg className="w-5 h-5 text-text-main" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg
+              className="w-5 h-5 text-text-main"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
               <path d="m9 18 6-6-6-6" />
             </svg>
           </button>
 
-          {/* Dot indicators */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-2" role="tablist" aria-label="Slide indicators">
+          {/* Indicator dots */}
+          <div
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/25 backdrop-blur-xs"
+            role="tablist"
+            aria-label="Slide indicators"
+          >
             {slides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrent(idx)}
+                onClick={() => goToSlide(idx)}
                 role="tab"
                 aria-selected={idx === current}
                 aria-label={`Go to slide ${idx + 1}`}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  idx === current ? "bg-white" : "bg-white/50 hover:bg-white/80"
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === current
+                    ? "w-7 bg-white shadow-sm"
+                    : "w-2 bg-white/50 hover:bg-white/80"
                 }`}
               />
             ))}
