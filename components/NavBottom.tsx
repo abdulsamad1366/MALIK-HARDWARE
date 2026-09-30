@@ -154,7 +154,7 @@ export default function NavBottom({ categories }: NavBottomProps) {
                   exit={{ opacity: 0, y: 4, scale: 0.98 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className={`absolute top-full left-1/2 -translate-x-1/2 z-50 mt-1 bg-bg-card rounded-xl shadow-xl border border-border-subtle py-2 overflow-hidden ${
-                    categories.length > 7 ? "w-[520px] sm:w-[580px] p-3" : "min-w-56"
+                    categories.length > 7 ? "w-130 sm:w-145 p-3" : "min-w-56"
                   }`}
                   role="menu"
                   onMouseEnter={handleMouseEnter}

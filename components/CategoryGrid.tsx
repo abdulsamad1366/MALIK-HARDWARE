@@ -175,12 +175,12 @@ export default function CategoryGrid({ items, source, heading }: CategoryGridPro
         <div className="relative">
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-3 pt-1 px-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-3 pt-1 px-0.5 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden"
           >
             {items.map((item) => (
               <div
                 key={item.id}
-                className="w-[185px] sm:w-[210px] md:w-[230px] shrink-0 snap-start"
+                className="w-46.25 sm:w-52.5 md:w-57.5 shrink-0 snap-start"
               >
                 <CategoryCard item={item} source={source} />
               </div>
