@@ -425,12 +425,12 @@ async function main() {
   // PromoBanners
   // -------------------------------------------------------------------------
   const banners = [
-    { title: "Pulls", image: "/images/promo/pulls_clean.jpg", linkUrl: "/category/cabinet-fittings", order: 1 },
-    { title: "Aldrop", image: "/images/promo/aldrop_clean.jpg", linkUrl: "/category/aldrops", order: 2 },
-    { title: "Mortise Locks", image: "/images/promo/mortise_locks_clean.jpg", linkUrl: "/category/locks", order: 3 },
-    { title: "Door Lock", image: "/images/promo/door_lock_clean.jpg", linkUrl: "/category/locks", order: 4 },
-    { title: "Door Stopper", image: "/images/promo/door_stopper_clean.jpg", linkUrl: "/category/door-closers", order: 5 },
-    { title: "Tower Bolt", image: "/images/promo/tower_bolt_clean.jpg", linkUrl: "/category/aldrops", order: 6 },
+    { title: "Pulls", image: "/images/promo/pulls_clean_v2.jpg", linkUrl: "/category/cabinet-fittings", order: 1 },
+    { title: "Aldrop", image: "/images/promo/aldrop_clean_v2.jpg", linkUrl: "/category/aldrops", order: 2 },
+    { title: "Mortise Locks", image: "/images/promo/mortise_locks_clean_v2.jpg", linkUrl: "/category/locks", order: 3 },
+    { title: "Door Lock", image: "/images/promo/door_lock_clean_v2.jpg", linkUrl: "/category/locks", order: 4 },
+    { title: "Door Stopper", image: "/images/promo/door_stopper_clean_v2.jpg", linkUrl: "/category/door-closers", order: 5 },
+    { title: "Tower Bolt", image: "/images/promo/tower_bolt_clean_v2.jpg", linkUrl: "/category/aldrops", order: 6 },
   ];
 
   for (const b of banners) {

@@ -36,32 +36,32 @@ interface PromoBannerStripProps {
 const defaultShowcaseBanners = {
   pulls: {
     title: "Pulls",
-    image: "/images/promo/pulls_clean.jpg",
+    image: "/images/promo/pulls_clean_v2.jpg",
     linkUrl: "/category/cabinet-fittings",
   },
   aldrop: {
     title: "Aldrop",
-    image: "/images/promo/aldrop_clean.jpg",
+    image: "/images/promo/aldrop_clean_v2.jpg",
     linkUrl: "/category/aldrops",
   },
   mortiseLocks: {
     title: "Mortise Locks",
-    image: "/images/promo/mortise_locks_clean.jpg",
+    image: "/images/promo/mortise_locks_clean_v2.jpg",
     linkUrl: "/category/locks",
   },
   doorLock: {
     title: "Door Lock",
-    image: "/images/promo/door_lock_clean.jpg",
+    image: "/images/promo/door_lock_clean_v2.jpg",
     linkUrl: "/category/locks",
   },
   doorStopper: {
     title: "Door Stopper",
-    image: "/images/promo/door_stopper_clean.jpg",
+    image: "/images/promo/door_stopper_clean_v2.jpg",
     linkUrl: "/category/door-closers",
   },
   towerBolt: {
     title: "Tower Bolt",
-    image: "/images/promo/tower_bolt_clean.jpg",
+    image: "/images/promo/tower_bolt_clean_v2.jpg",
     linkUrl: "/category/aldrops",
   },
 };
@@ -115,10 +115,12 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
 
               {/* Code-rendered text overlay */}
               <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
-                <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-text-main">
-                  PULLS
-                </h3>
-                <div className="w-8 sm:w-10 h-0.5 bg-text-main mt-1" />
+                <div className="inline-flex flex-col items-center">
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-text-main">
+                    PULLS
+                  </h3>
+                  <div className="w-8 sm:w-10 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -144,10 +146,12 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
 
               {/* Code-rendered text overlay */}
               <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
-                <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-white drop-shadow-xs">
-                  ALDROP
-                </h3>
-                <div className="w-8 sm:w-10 h-0.5 bg-white mt-1" />
+                <div className="inline-flex flex-col items-center">
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-white drop-shadow-xs">
+                    ALDROP
+                  </h3>
+                  <div className="w-8 sm:w-10 h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -173,10 +177,12 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
 
               {/* Code-rendered text overlay */}
               <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
-                <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-wider uppercase text-text-main">
-                  MORTISE LOCKS
-                </h3>
-                <div className="w-14 sm:w-16 h-0.5 bg-text-main mt-1" />
+                <div className="inline-flex flex-col items-start">
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-wider uppercase text-text-main">
+                    MORTISE LOCKS
+                  </h3>
+                  <div className="w-14 sm:w-16 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -216,7 +222,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                   <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-text-main">
                     SHOP NOW
                   </span>
-                  <div className="w-8 sm:w-10 h-0.5 bg-text-main mt-1" />
+                  <div className="w-full h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-left" />
                 </div>
               </div>
             </Link>
@@ -252,7 +258,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                     <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-white/95">
                       SHOP NOW
                     </span>
-                    <div className="w-8 sm:w-10 h-0.5 bg-white mt-1 ml-auto" />
+                    <div className="w-full h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
                   </div>
                 </div>
               </Link>
@@ -286,7 +292,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                     <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-white/95">
                       SHOP NOW
                     </span>
-                    <div className="w-8 sm:w-10 h-0.5 bg-white mt-1 ml-auto" />
+                    <div className="w-full h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
                   </div>
                 </div>
               </Link>
