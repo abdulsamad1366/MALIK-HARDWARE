@@ -50,13 +50,19 @@
    Base styles — applied to every page.
    Background and text use tokens, not hardcoded hex values.
    ------------------------------------------------------------------------- */
+html {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-main);
   font-family: var(--font-sans);
   line-height: 1.5;
   /* Prevent content width from causing horizontal scroll on mobile */
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100vw;
 }
 
 /* Smooth focus rings — visible, not intrusive */

@@ -35,8 +35,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-bg-primary text-text-main">
+    <html lang="en" className="h-full antialiased overflow-x-clip">
+      <body className="min-h-full flex flex-col bg-bg-primary text-text-main overflow-x-clip max-w-full">
         {/*
          * AuthProvider is a Client Component — it fetches /api/auth/me on
          * mount to rehydrate user state. CartProvider sits inside it because

@@ -87,21 +87,24 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
     defaultShowcaseBanners.towerBolt;
 
   return (
-    <section className="py-8 sm:py-12 md:py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-      <div className="flex flex-col gap-4 sm:gap-6">
+    <section className="py-6 sm:py-10 md:py-14 px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      <div className="flex flex-col gap-3.5 sm:gap-5 lg:gap-6">
         {/* ====================================================================
-            ROW 1: 3 Banners (Pulls 50%, Aldrop 25%, Mortise Locks 25%)
+            ROW 1:
+            - Mobile: 2-column grid. Pulls spans both columns (100%),
+              Aldrop & Mortise Locks sit side-by-side (50% / 50%).
+            - Desktop: 12-column grid. Pulls (50%), Aldrop (25%), Mortise Locks (25%).
             ==================================================================== */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6">
-          {/* Tile 1: Pulls (50% on desktop) */}
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-3.5 sm:gap-5 lg:gap-6">
+          {/* Tile 1: Pulls (Full width on mobile, 50% on desktop) */}
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="col-span-1 sm:col-span-2 lg:col-span-6"
+            className="col-span-2 lg:col-span-6"
           >
             <Link
               href={pulls.linkUrl}
-              className="relative block h-56 sm:h-64 md:h-72 lg:h-[300px] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+              className="relative block aspect-[1.65/1] sm:aspect-[2/1] lg:aspect-auto lg:h-[300px] rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
               aria-label={`${pulls.title} — Shop Now`}
             >
               <Image
@@ -110,30 +113,30 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 fill
                 priority
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
 
               {/* Code-rendered text overlay */}
-              <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
+              <div className="absolute top-4 left-4 sm:top-7 sm:left-7 z-10 pointer-events-none">
                 <div className="inline-flex flex-col items-center">
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-text-main">
+                  <h3 className="text-xs sm:text-base md:text-lg font-bold tracking-widest uppercase text-text-main">
                     PULLS
                   </h3>
-                  <div className="w-8 sm:w-10 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                  <div className="w-7 sm:w-10 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
                 </div>
               </div>
             </Link>
           </motion.div>
 
-          {/* Tile 2: Aldrop (25% on desktop) */}
+          {/* Tile 2: Aldrop (50% on mobile, 25% on desktop) */}
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="col-span-1 sm:col-span-1 lg:col-span-3"
+            className="col-span-1 lg:col-span-3"
           >
             <Link
               href={aldrop.linkUrl}
-              className="relative block h-56 sm:h-64 md:h-72 lg:h-[300px] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+              className="relative block aspect-[0.87/1] sm:aspect-[1/1] lg:aspect-auto lg:h-[300px] rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
               aria-label={`${aldrop.title} — Shop Now`}
             >
               <Image
@@ -141,30 +144,30 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 alt={aldrop.title}
                 fill
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 1024px) 50vw, 25vw"
               />
 
               {/* Code-rendered text overlay */}
-              <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
+              <div className="absolute top-4 left-4 sm:top-7 sm:left-7 z-10 pointer-events-none">
                 <div className="inline-flex flex-col items-center">
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-widest uppercase text-white drop-shadow-xs">
+                  <h3 className="text-xs sm:text-base md:text-lg font-bold tracking-widest uppercase text-white drop-shadow-xs">
                     ALDROP
                   </h3>
-                  <div className="w-8 sm:w-10 h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                  <div className="w-7 sm:w-10 h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
                 </div>
               </div>
             </Link>
           </motion.div>
 
-          {/* Tile 3: Mortise Locks (25% on desktop) */}
+          {/* Tile 3: Mortise Locks (50% on mobile, 25% on desktop) */}
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="col-span-1 sm:col-span-1 lg:col-span-3"
+            className="col-span-1 lg:col-span-3"
           >
             <Link
               href={mortiseLocks.linkUrl}
-              className="relative block h-56 sm:h-64 md:h-72 lg:h-[300px] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+              className="relative block aspect-[0.87/1] sm:aspect-[1/1] lg:aspect-auto lg:h-[300px] rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
               aria-label={`${mortiseLocks.title} — Shop Now`}
             >
               <Image
@@ -172,16 +175,16 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 alt={mortiseLocks.title}
                 fill
                 className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                sizes="(max-width: 1024px) 50vw, 25vw"
               />
 
               {/* Code-rendered text overlay */}
-              <div className="absolute top-5 left-5 sm:top-7 sm:left-7 z-10 pointer-events-none">
+              <div className="absolute top-4 left-4 sm:top-7 sm:left-7 z-10 pointer-events-none">
                 <div className="inline-flex flex-col items-start">
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold tracking-wider uppercase text-text-main">
+                  <h3 className="text-[11px] sm:text-sm md:text-base lg:text-lg font-bold tracking-wider uppercase text-text-main whitespace-nowrap">
                     MORTISE LOCKS
                   </h3>
-                  <div className="w-14 sm:w-16 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
+                  <div className="w-9 sm:w-14 h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:w-full" />
                 </div>
               </div>
             </Link>
@@ -189,12 +192,12 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
         </div>
 
         {/* ====================================================================
-            ROW 2: Asymmetric 2-Column Grid
-            - Left: Large Door Lock banner (~66% on desktop)
-            - Right: 2 Stacked banners: Door Stopper + Tower Bolt (~33% on desktop)
+            ROW 2:
+            - Mobile: Full-width stacked banners (Door Lock, Door Stopper, Tower Bolt)
+            - Desktop: Left 66% Door Lock, Right 33% 2 stacked banners
             ==================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-          {/* Tile 4: Door Lock (Wide Left Banner — spans full height of right stack) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-5 lg:gap-6">
+          {/* Tile 4: Door Lock (Wide landscape on mobile, 66% span on desktop) */}
           <motion.div
             whileHover={{ y: -4 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
@@ -202,7 +205,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
           >
             <Link
               href={doorLock.linkUrl}
-              className="relative block h-72 sm:h-96 md:h-[460px] lg:h-[500px] rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+              className="relative block aspect-[1.82/1] sm:aspect-[1.85/1] lg:aspect-auto lg:h-[500px] rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
               aria-label={`${doorLock.title} — Shop Now`}
             >
               <Image
@@ -214,23 +217,23 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
               />
 
               {/* Code-rendered text overlay */}
-              <div className="absolute top-1/2 -translate-y-1/2 left-6 sm:left-10 md:left-12 z-10 pointer-events-none">
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-wide uppercase text-text-main leading-tight">
+              <div className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-10 md:left-12 z-10 pointer-events-none">
+                <h3 className="text-base sm:text-2xl md:text-3xl font-extrabold tracking-wide uppercase text-text-main leading-tight">
                   DOOR LOCK
                 </h3>
-                <div className="inline-block mt-2 sm:mt-2.5">
-                  <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-text-main">
+                <div className="inline-block mt-1 sm:mt-2.5">
+                  <span className="block text-[10px] sm:text-xs md:text-sm font-bold tracking-widest uppercase text-text-main">
                     SHOP NOW
                   </span>
-                  <div className="w-full h-0.5 bg-text-main mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-left" />
+                  <div className="w-full h-0.5 bg-text-main mt-0.5 sm:mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-left" />
                 </div>
               </div>
             </Link>
           </motion.div>
 
-          {/* Right Column: 2 Stacked Banners */}
-          <div className="col-span-1 lg:col-span-4 flex flex-col gap-4 sm:gap-6 h-auto lg:h-[500px]">
-            {/* Tile 5: Door Stopper (Top) */}
+          {/* Right Column: 2 Stacked Banners (individual full width on mobile) */}
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3.5 sm:gap-5 lg:gap-6 h-auto lg:h-[500px]">
+            {/* Tile 5: Door Stopper */}
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
@@ -238,7 +241,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
             >
               <Link
                 href={doorStopper.linkUrl}
-                className="relative block h-52 sm:h-56 lg:h-full rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+                className="relative block aspect-[1.83/1] sm:aspect-[1.85/1] lg:aspect-auto lg:h-full rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
                 aria-label={`${doorStopper.title} — Shop Now`}
               >
                 <Image
@@ -250,21 +253,21 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 />
 
                 {/* Code-rendered text overlay */}
-                <div className="absolute top-1/2 -translate-y-1/2 right-6 sm:right-8 md:right-10 z-10 text-right pointer-events-none">
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold tracking-wide uppercase text-white">
+                <div className="absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-10 z-10 text-right pointer-events-none">
+                  <h3 className="text-sm sm:text-lg md:text-xl font-bold tracking-wide uppercase text-white">
                     DOOR STOPPER
                   </h3>
-                  <div className="inline-block mt-1 sm:mt-1.5 text-right">
-                    <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-white/95">
+                  <div className="inline-block mt-0.5 sm:mt-1.5 text-right">
+                    <span className="block text-[10px] sm:text-xs md:text-sm font-bold tracking-widest uppercase text-white/95">
                       SHOP NOW
                     </span>
-                    <div className="w-full h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
+                    <div className="w-full h-0.5 bg-white mt-0.5 sm:mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
                   </div>
                 </div>
               </Link>
             </motion.div>
 
-            {/* Tile 6: Tower Bolt (Bottom) */}
+            {/* Tile 6: Tower Bolt */}
             <motion.div
               whileHover={{ y: -4 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
@@ -272,7 +275,7 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
             >
               <Link
                 href={towerBolt.linkUrl}
-                className="relative block h-52 sm:h-56 lg:h-full rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
+                className="relative block aspect-[1.83/1] sm:aspect-[1.85/1] lg:aspect-auto lg:h-full rounded-lg sm:rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group bg-bg-secondary border border-border-subtle"
                 aria-label={`${towerBolt.title} — Shop Now`}
               >
                 <Image
@@ -284,15 +287,15 @@ export default function PromoBannerStrip({ banners }: PromoBannerStripProps) {
                 />
 
                 {/* Code-rendered text overlay */}
-                <div className="absolute top-1/2 -translate-y-1/2 right-6 sm:right-8 md:right-10 z-10 text-right pointer-events-none">
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold tracking-wide uppercase text-white">
+                <div className="absolute top-1/2 -translate-y-1/2 right-4 sm:right-8 md:right-10 z-10 text-right pointer-events-none">
+                  <h3 className="text-sm sm:text-lg md:text-xl font-bold tracking-wide uppercase text-white">
                     TOWER BOLT
                   </h3>
-                  <div className="inline-block mt-1 sm:mt-1.5 text-right">
-                    <span className="block text-xs sm:text-sm font-bold tracking-widest uppercase text-white/95">
+                  <div className="inline-block mt-0.5 sm:mt-1.5 text-right">
+                    <span className="block text-[10px] sm:text-xs md:text-sm font-bold tracking-widest uppercase text-white/95">
                       SHOP NOW
                     </span>
-                    <div className="w-full h-0.5 bg-white mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
+                    <div className="w-full h-0.5 bg-white mt-0.5 sm:mt-1 rounded-full transition-all duration-300 group-hover:scale-x-110 origin-right" />
                   </div>
                 </div>
               </Link>

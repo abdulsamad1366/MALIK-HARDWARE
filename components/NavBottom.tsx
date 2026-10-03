@@ -86,16 +86,16 @@ export default function NavBottom({ categories }: NavBottomProps) {
 
   return (
     <nav
-      className="bg-bg-primary border-b border-border-subtle relative z-30 overflow-visible"
+      className="bg-bg-primary border-b border-border-subtle relative z-30 overflow-x-auto sm:overflow-visible scrollbar-none"
       aria-label="Main navigation"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center overflow-visible">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-start sm:justify-center overflow-x-auto sm:overflow-visible scrollbar-none">
         {/*
          * Centered nav buttons row — overflow-visible ensures dropdown floats above
-         * page content without clipping or triggering scroll.
+         * page content without clipping or triggering scroll on desktop.
          */}
         <ul
-          className="flex items-center justify-center gap-1 sm:gap-3 md:gap-6 overflow-visible py-0.5"
+          className="flex items-center justify-start sm:justify-center gap-1 sm:gap-3 md:gap-6 py-0.5 min-w-max sm:min-w-0"
           role="list"
         >
           {/* Home */}
