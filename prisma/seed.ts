@@ -425,20 +425,28 @@ async function main() {
   // PromoBanners
   // -------------------------------------------------------------------------
   const banners = [
-    { title: "Aldrop & Tower Bolts", image: "/images/banners/aldrop.jpg", linkUrl: "/products?category=handles-pulls", order: 1 },
-    { title: "Mortise Locks", image: "/images/banners/locks.jpg", linkUrl: "/products?category=locks", order: 2 },
-    { title: "SS Hinges", image: "/images/banners/hinges.jpg", linkUrl: "/products?category=hinges", order: 3 },
+    { title: "Pulls", image: "/images/promo/pulls_clean.jpg", linkUrl: "/category/cabinet-fittings", order: 1 },
+    { title: "Aldrop", image: "/images/promo/aldrop_clean.jpg", linkUrl: "/category/aldrops", order: 2 },
+    { title: "Mortise Locks", image: "/images/promo/mortise_locks_clean.jpg", linkUrl: "/category/locks", order: 3 },
+    { title: "Door Lock", image: "/images/promo/door_lock_clean.jpg", linkUrl: "/category/locks", order: 4 },
+    { title: "Door Stopper", image: "/images/promo/door_stopper_clean.jpg", linkUrl: "/category/door-closers", order: 5 },
+    { title: "Tower Bolt", image: "/images/promo/tower_bolt_clean.jpg", linkUrl: "/category/aldrops", order: 6 },
   ];
 
   for (const b of banners) {
-    const exists = await db.promoBanner.findFirst({ where: { title: b.title } });
-    if (!exists) {
+    const existing = await db.promoBanner.findFirst({ where: { title: b.title } });
+    if (existing) {
+      await db.promoBanner.update({
+        where: { id: existing.id },
+        data: { image: b.image, linkUrl: b.linkUrl, displayOrder: b.order, isActive: true },
+      });
+    } else {
       await db.promoBanner.create({
         data: { title: b.title, image: b.image, linkUrl: b.linkUrl, displayOrder: b.order, isActive: true },
       });
     }
   }
-  console.log("  ✓ PromoBanners: 3 banners");
+  console.log(`  ✓ PromoBanners: ${banners.length} banners`);
 
   console.log("\n✅ Seed complete.");
 }

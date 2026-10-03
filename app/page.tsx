@@ -104,11 +104,9 @@ export default async function HomePage() {
       )}
 
       {/* 3 — Promo banners */}
-      {promobanners.length > 0 && (
-        <div className="bg-bg-secondary border-t border-border-subtle">
-          <PromoBannerStrip banners={promobanners} />
-        </div>
-      )}
+      <div className="bg-bg-primary border-t border-border-subtle">
+        <PromoBannerStrip banners={promobanners} />
+      </div>
 
       {/* 4 — Shop by Use */}
       {useCases.length > 0 && (
